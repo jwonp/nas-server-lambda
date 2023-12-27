@@ -1,0 +1,23 @@
+# org: ikiningyou
+# app: nas-server
+service: nas-server-lambda
+frameworkVersion: '3'
+configValidationMode: error
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-2
+
+functions:
+  upload:
+    handler: upload.handler
+    events:
+      - httpApi:
+          path: /upload
+          method: get
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-dotenv-plugin

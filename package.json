@@ -1,0 +1,16 @@
+{
+  "name": "nas-server-lambda",
+  "version": "1.0.0",
+  "description": "nas server backend on lambda",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.130"
+  },
+  "devDependencies": {
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-offline": "^13.3.2",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.3.3"
+  }
+}
