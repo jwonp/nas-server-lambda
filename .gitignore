@@ -5,3 +5,7 @@ jspm_packages
 # Serverless directories
 .serverless
 .build
+
+bugfix.txt
+firebase-admin-key.json
+.env
