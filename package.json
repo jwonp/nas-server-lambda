@@ -5,9 +5,16 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@types/aws-lambda": "^8.10.130"
+    "@types/aws-lambda": "^8.10.130",
+    "aws-sdk": "^2.1525.0",
+    "eccrypto": "^1.1.6",
+    "firebase-admin": "^12.0.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/eccrypto": "^1.1.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.10.6",
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-offline": "^13.3.2",
     "serverless-plugin-typescript": "^2.1.5",
