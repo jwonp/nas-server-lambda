@@ -8,16 +8,34 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: ap-northeast-2
+  tracing:
+    lambda: true
 
 functions:
-  upload:
-    handler: upload.handler
-    events:
-      - httpApi:
-          path: /upload
-          method: get
-
+  # upload:
+  #   handler: upload.handler
+  #   description: this function is not for production. if you don`t need this function, delete.
+  #   events:
+  #     - httpApi:
+  #         path: /upload
+  #         method: get
+  # /user/** 
+  signin: ${file(./settings/functions/controllers/users.yml):signin}
+  signup: ${file(./settings/functions/controllers/users.yml):signup}
+  # /storage/**
+  meta: ${file(./settings/functions/controllers/storages.yml):meta}
+  item: ${file(./settings/functions/controllers/storages.yml):item}
+  authorizer:
+    handler: src/api/auth/authorizer.handler
+    description: this is for authorizing requests
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-dotenv-plugin
+  
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+
+
