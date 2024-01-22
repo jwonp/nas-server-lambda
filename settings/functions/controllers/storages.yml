@@ -1,0 +1,19 @@
+meta:
+  handler: src/api/storage/meta.handler
+  description: add uploaded file`s meta data.
+  events:
+    - httpApi:
+        path: /storage/meta
+        method: post
+  url:
+    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+
+item:
+  handler: src/api/storage/item.handler
+  description: get user files in user`s storage by directory
+  events:
+    - httpApi:
+        path: /storage/item
+        method: get
+  url:
+    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}

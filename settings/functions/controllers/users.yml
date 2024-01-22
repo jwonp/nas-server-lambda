@@ -1,0 +1,19 @@
+signin:
+    handler: src/api/user/signin.handler
+    description: authorize user. Entity 'UserDetail' is required.
+    events:
+      - httpApi:
+          path: /user/signin
+          method: post
+    # url:
+    #   cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+signup:
+  handler: src/api/user/signup.handler
+  description: regist user. All properties of Entity 'UserDetail' is required.
+  events:
+    - httpApi:
+        path: /user/signup
+        method: post
+  url:
+    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
