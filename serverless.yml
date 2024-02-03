@@ -22,9 +22,14 @@ functions:
   # /user/** 
   signin: ${file(./settings/functions/controllers/users.yml):signin}
   signup: ${file(./settings/functions/controllers/users.yml):signup}
+  volume: ${file(./settings/functions/controllers/users.yml):volume}
   # /storage/**
-  meta: ${file(./settings/functions/controllers/storages.yml):meta}
-  item: ${file(./settings/functions/controllers/storages.yml):item}
+  metaPOST: ${file(./settings/functions/controllers/storages.yml):metaPOST}
+  metaTitlePATCH: ${file(./settings/functions/controllers/storages.yml):metaTitlePATCH}
+  itemGET: ${file(./settings/functions/controllers/storages.yml):itemGET}
+  itemDELETE: ${file(./settings/functions/controllers/storages.yml):itemDELETE}
+  directoryCheckGET: ${file(./settings/functions/controllers/storages.yml):directoryCheckGET}
+  directoryHistoryGET: ${file(./settings/functions/controllers/storages.yml):directoryHistoryGET}
   authorizer:
     handler: src/api/auth/authorizer.handler
     description: this is for authorizing requests

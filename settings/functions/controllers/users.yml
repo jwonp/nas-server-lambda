@@ -17,3 +17,13 @@ signup:
         method: post
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    
+volume:
+  handler: src/api/user/volume.handler
+  description: get user`s volume detail
+  events:
+    - httpApi:
+        path: /user/volume
+        method: get
+  url:
+    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}

@@ -1,0 +1,14 @@
+corsSettiings:
+  allowedOrigins:
+    # - http://localhost:3000
+    - https://www.ikiningyou.com
+  allowedHeaders:
+    - Content-Type
+    - Authorization
+  allowedMethods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - PATCH
+  allowCredentials: true
