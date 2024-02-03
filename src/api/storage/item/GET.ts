@@ -1,9 +1,10 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import admin, { auth } from "firebase-admin";
-import * as serviceAccount from "../../../firebase-admin-key.json";
-import { FIREBASE_COLLECTION } from "../../libs/firebase/collections";
-import { getPayloadInJWT } from "../../libs/JWTparser";
+import * as serviceAccount from "../../../../firebase-admin-key.json";
+import { FIREBASE_COLLECTION } from "../../../libs/firebase/collections";
+import { getPayloadInJWT } from "../../../libs/JWTparser";
 import { JwtPayload } from "jsonwebtoken";
+import { MetaData } from "../../../types/MetaData";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -21,8 +22,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     return response;
   }
   const { path } = event.queryStringParameters;
-  
-  
+
   const authorization = event.headers.authorization;
   const payload = getPayloadInJWT(authorization);
 
@@ -39,12 +39,15 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.STORAGES)
     .where("directory", "==", path)
     .get();
-  const files = fileDocs.docs.map((doc) => doc.data());
-
+  const files = fileDocs.docs.map((doc) => doc.data()) as Omit<
+    MetaData,
+    "ownerId"
+  >[];
+  files.sort((a, b) => (a.type === "folder" ? -1 : 1));
   response.body = JSON.stringify({
-    id:userDocId,
+    id: userDocId,
     username: (payload as JwtPayload).name,
-    image:(payload as JwtPayload).image,
+    image: (payload as JwtPayload).image,
     files: files,
   });
   return response;
