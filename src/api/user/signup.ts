@@ -5,6 +5,7 @@ import { FieldValue } from "firebase-admin/firestore";
 
 import admin from "firebase-admin";
 import * as serviceAccount from "../../../firebase-admin-key.json";
+import { VolumeSize } from "../../entity/Volume";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -32,16 +33,28 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     response.statusCode = 204;
     return response;
   }
-  const res = await db
+  const addUserResult = await db
     .collection(FIREBASE_COLLECTION.USERS)
     .add({ ...userDetail, createdTime: FieldValue.serverTimestamp() });
 
-  const responseData: Omit<UserDetail, "password"> = {
-    id: res.id,
+  const initVolumeSize = 128 * 1024 * 1024;
+  const initVolume: VolumeSize = {
+    max: initVolumeSize,
+    now: 0,
+  };
+  const addVolumeResult = await db
+    .collection(FIREBASE_COLLECTION.USERS)
+    .doc(addUserResult.id)
+    .collection(FIREBASE_COLLECTION.VOLUME)
+    .add(initVolume);
+    
+  const responseData: Omit<UserDetail, "password"> & { volume: VolumeSize } = {
+    id: addUserResult.id,
     username: userDetail.username,
     name: userDetail.name,
     icon: userDetail.icon,
     phone: userDetail.phone,
+    volume: initVolume,
   };
   console.log(responseData);
   response.body = JSON.stringify(responseData);

@@ -1,4 +1,5 @@
 export const FIREBASE_COLLECTION={
     USERS:"users",
-    STORAGES:"storage"
+    STORAGES:"storage",
+    VOLUME:"volume"
 }
