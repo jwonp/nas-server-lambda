@@ -6,6 +6,8 @@ export async function handler(event: APIGatewayProxyEvent) {
   const response = {
     isAuthorized: false,
   };
+  console.log(`event ${JSON.stringify(event)}`);
+  console.log(`headers ${JSON.stringify(event.headers)}`);
   console.log(`authorization ${authorization}`);
   if (
     //@ts-ignore

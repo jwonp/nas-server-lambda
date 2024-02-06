@@ -10,6 +10,17 @@ provider:
   region: ap-northeast-2
   tracing:
     lambda: true
+  logs:
+    httpApi: true
+  httpApi:
+    authorizers:
+      customAuthorizer:
+        name: customAuthorizer
+        type: request
+        functionName: authorizer
+        enableSimpleResponses: true
+        identifySource:
+          - $request.header.Authorization
 
 functions:
   # upload:
@@ -20,6 +31,9 @@ functions:
   #         path: /upload
   #         method: get
   # /user/** 
+  authorizer:
+    handler: src/api/auth/authorizer.handler
+    description: this is for authorizing requests
   signin: ${file(./settings/functions/controllers/users.yml):signin}
   signup: ${file(./settings/functions/controllers/users.yml):signup}
   volume: ${file(./settings/functions/controllers/users.yml):volume}
@@ -30,13 +44,12 @@ functions:
   itemDELETE: ${file(./settings/functions/controllers/storages.yml):itemDELETE}
   directoryCheckGET: ${file(./settings/functions/controllers/storages.yml):directoryCheckGET}
   directoryHistoryGET: ${file(./settings/functions/controllers/storages.yml):directoryHistoryGET}
-  authorizer:
-    handler: src/api/auth/authorizer.handler
-    description: this is for authorizing requests
+
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-dotenv-plugin
+  - serverless-enable-api-logs
   
 
 custom:

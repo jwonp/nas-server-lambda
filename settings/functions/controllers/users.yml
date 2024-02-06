@@ -5,6 +5,9 @@ signin:
       - httpApi:
           path: /user/signin
           method: post
+          authorizer:
+            name: customAuthorizer
+
     # url:
     #   cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -15,6 +18,8 @@ signup:
     - httpApi:
         path: /user/signup
         method: post
+        authorizer:
+          name: customAuthorizer
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
     
@@ -25,5 +30,7 @@ volume:
     - httpApi:
         path: /user/volume
         method: get
+        authorizer:
+          name: customAuthorizer
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}

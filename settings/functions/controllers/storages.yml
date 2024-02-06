@@ -5,6 +5,8 @@ metaPOST:
     - httpApi:
         path: /storage/meta
         method: post
+        authorizer:
+          name: customAuthorizer
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
 
@@ -15,6 +17,8 @@ metaTitlePATCH:
     - httpApi:
         path: /storage/meta/title
         method: patch
+        authorizer: 
+          name: customAuthorizer
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
 
@@ -25,6 +29,8 @@ itemGET:
     - httpApi:
         path: /storage/item
         method: get
+        authorizer:
+          name: customAuthorizer        
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
 
@@ -35,6 +41,8 @@ itemDELETE:
     - httpApi:
         path: /storage/item
         method: delete
+        authorizer:
+          name: customAuthorizer        
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
 
@@ -45,6 +53,8 @@ directoryCheckGET:
     - httpApi:
         path: /storage/directory/check
         method: get
+        authorizer:
+          name: customAuthorizer
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
 
@@ -55,5 +65,7 @@ directoryHistoryGET:
     - httpApi:
         path: /storage/directory/history
         method: get
+        authorizer:
+          name: customAuthorizer        
   url:
     cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
