@@ -6,6 +6,7 @@ export async function handler(event: APIGatewayProxyEvent) {
   const response = {
     isAuthorized: false,
   };
+  console.log(`authorization ${authorization}`);
   if (
     //@ts-ignore
     event.requestContext.http.path === "/user/signin" ||
@@ -28,6 +29,8 @@ export async function handler(event: APIGatewayProxyEvent) {
   const secretKey = process.env.JWT_SIGN_KEY;
   try {
     const verified = verify(token, secretKey);
+    console.log("verified");
+    console.log(verified);
     response.isAuthorized = true;
     return response;
   } catch (error) {
