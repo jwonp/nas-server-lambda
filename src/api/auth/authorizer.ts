@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { verify } from "jsonwebtoken";
 
 export async function handler(event: APIGatewayProxyEvent) {
-  const authorization = event.headers.Authorization;
+  const authorization = event.headers.authorization;
   const response = {
     isAuthorized: false,
   };
@@ -18,7 +18,7 @@ export async function handler(event: APIGatewayProxyEvent) {
     response.isAuthorized = true;
     return response;
   }
-  if (!authorization || !process.env.JWT_SIGN_KEY) {
+  if (authorization === undefined || !process.env.JWT_SIGN_KEY) {
     return response;
   }
 
