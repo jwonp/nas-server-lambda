@@ -5,10 +5,8 @@ metaPOST:
     - httpApi:
         path: /storage/meta
         method: post
-        authorizer:
-          name: customAuthorizer
   url:
-    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 metaTitlePATCH:
   handler: src/api/storage/meta/title.handler
@@ -17,10 +15,8 @@ metaTitlePATCH:
     - httpApi:
         path: /storage/meta/title
         method: patch
-        authorizer: 
-          name: customAuthorizer
   url:
-    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 itemGET:
   handler: src/api/storage/item/GET.handler
@@ -29,10 +25,8 @@ itemGET:
     - httpApi:
         path: /storage/item
         method: get
-        authorizer:
-          name: customAuthorizer        
   url:
-    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 itemDELETE:
   handler: src/api/storage/item/DELETE.handler
@@ -41,10 +35,8 @@ itemDELETE:
     - httpApi:
         path: /storage/item
         method: delete
-        authorizer:
-          name: customAuthorizer        
   url:
-    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 directoryCheckGET:
   handler: src/api/storage/directory/check.handler
@@ -53,10 +45,8 @@ directoryCheckGET:
     - httpApi:
         path: /storage/directory/check
         method: get
-        authorizer:
-          name: customAuthorizer
   url:
-    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 directoryHistoryGET:
   handler: src/api/storage/directory/history.handler
@@ -65,7 +55,5 @@ directoryHistoryGET:
     - httpApi:
         path: /storage/directory/history
         method: get
-        authorizer:
-          name: customAuthorizer        
   url:
-    cors: ${file(./settings/functions/CorsSettings.yml):corsSettiings}
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}

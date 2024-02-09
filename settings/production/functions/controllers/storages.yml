@@ -1,0 +1,71 @@
+metaPOST:
+  handler: src/api/storage/meta.handler
+  description: add uploaded file`s meta data.
+  events:
+    - httpApi:
+        path: /storage/meta
+        method: post
+        authorizer:
+          name: customAuthorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+metaTitlePATCH:
+  handler: src/api/storage/meta/title.handler
+  description: rename file name on meta data.
+  events:
+    - httpApi:
+        path: /storage/meta/title
+        method: patch
+        authorizer: 
+          name: customAuthorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+itemGET:
+  handler: src/api/storage/item/GET.handler
+  description: get user files in user`s storage by directory
+  events:
+    - httpApi:
+        path: /storage/item
+        method: get
+        authorizer:
+          name: customAuthorizer        
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+itemDELETE:
+  handler: src/api/storage/item/DELETE.handler
+  description: delete user file in user`s storage by directory
+  events:
+    - httpApi:
+        path: /storage/item
+        method: delete
+        authorizer:
+          name: customAuthorizer        
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+directoryCheckGET:
+  handler: src/api/storage/directory/check.handler
+  description: check the directory is existed
+  events:
+    - httpApi:
+        path: /storage/directory/check
+        method: get
+        authorizer:
+          name: customAuthorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+directoryHistoryGET:
+  handler: src/api/storage/directory/history.handler
+  description: get display directory list 
+  events:
+    - httpApi:
+        path: /storage/directory/history
+        method: get
+        authorizer:
+          name: customAuthorizer        
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}

@@ -1,0 +1,18 @@
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-2
+  tracing:
+    lambda: true
+  logs:
+    httpApi: true
+  httpApi:
+    authorizers:
+      customAuthorizer:
+        # name: customAuthorizer
+        type: request
+        # functionArn: arn:aws:lambda:ap-northeast-2:904308552572:function:nas-server-lambda-dev-authorizer
+        functionName: authorizer
+        enableSimpleResponses: true
+        identifySource:
+          - $request.header.Authorization

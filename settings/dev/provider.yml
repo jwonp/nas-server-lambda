@@ -1,0 +1,8 @@
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-2
+  tracing:
+    lambda: true
+  logs:
+    httpApi: true

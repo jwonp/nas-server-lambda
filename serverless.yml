@@ -1,59 +1,18 @@
 # org: ikiningyou
 # app: nas-server
 service: nas-server-lambda
-frameworkVersion: '3'
+frameworkVersion: "3"
 configValidationMode: error
 
-provider:
-  name: aws
-  runtime: nodejs18.x
-  region: ap-northeast-2
-  tracing:
-    lambda: true
-  logs:
-    httpApi: true
-  httpApi:
-    authorizers:
-      customAuthorizer:
-        name: customAuthorizer
-        type: request
-        functionName: authorizer
-        enableSimpleResponses: true
-        identifySource:
-          - $request.header.Authorization
-
-functions:
-  # upload:
-  #   handler: upload.handler
-  #   description: this function is not for production. if you don`t need this function, delete.
-  #   events:
-  #     - httpApi:
-  #         path: /upload
-  #         method: get
-  # /user/** 
-  authorizer:
-    handler: src/api/auth/authorizer.handler
-    description: this is for authorizing requests
-  signin: ${file(./settings/functions/controllers/users.yml):signin}
-  signup: ${file(./settings/functions/controllers/users.yml):signup}
-  volume: ${file(./settings/functions/controllers/users.yml):volume}
-  # /storage/**
-  metaPOST: ${file(./settings/functions/controllers/storages.yml):metaPOST}
-  metaTitlePATCH: ${file(./settings/functions/controllers/storages.yml):metaTitlePATCH}
-  itemGET: ${file(./settings/functions/controllers/storages.yml):itemGET}
-  itemDELETE: ${file(./settings/functions/controllers/storages.yml):itemDELETE}
-  directoryCheckGET: ${file(./settings/functions/controllers/storages.yml):directoryCheckGET}
-  directoryHistoryGET: ${file(./settings/functions/controllers/storages.yml):directoryHistoryGET}
+provider: ${file(./settings/dev/provider.yml):provider}
+functions: ${file(./settings/dev/functions/functions.yml):functions}
 
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-dotenv-plugin
   - serverless-enable-api-logs
-  
 
 custom:
   serverless-offline:
     httpPort: 4000
-
-

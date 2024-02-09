@@ -1,0 +1,15 @@
+functions:
+  authorizer:
+    handler: src/api/auth/authorizer.handler
+    description: this is for authorizing requests
+  # /user/**
+  signin: ${file(./settings/production/functions/controllers/users.yml):signin}
+  signup: ${file(./settings/production/functions/controllers/users.yml):signup}
+  volume: ${file(./settings/production/functions/controllers/users.yml):volume}
+  # /storage/**
+  metaPOST: ${file(./settings/production/functions/controllers/storages.yml):metaPOST}
+  metaTitlePATCH: ${file(./settings/production/functions/controllers/storages.yml):metaTitlePATCH}
+  itemGET: ${file(./settings/production/functions/controllers/storages.yml):itemGET}
+  itemDELETE: ${file(./settings/production/functions/controllers/storages.yml):itemDELETE}
+  directoryCheckGET: ${file(./settings/production/functions/controllers/storages.yml):directoryCheckGET}
+  directoryHistoryGET: ${file(./settings/production/functions/controllers/storages.yml):directoryHistoryGET}

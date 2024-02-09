@@ -1,0 +1,36 @@
+signin:
+    handler: src/api/user/signin.handler
+    description: authorize user. Entity 'UserDetail' is required.
+    events:
+      - httpApi:
+          path: /user/signin
+          method: post
+          authorizer:
+            name: customAuthorizer
+
+    # url:
+    #   cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+signup:
+  handler: src/api/user/signup.handler
+  description: regist user. All properties of Entity 'UserDetail' is required.
+  events:
+    - httpApi:
+        path: /user/signup
+        method: post
+        authorizer:
+          name: customAuthorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+    
+volume:
+  handler: src/api/user/volume.handler
+  description: get user`s volume detail
+  events:
+    - httpApi:
+        path: /user/volume
+        method: get
+        authorizer:
+          name: customAuthorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
