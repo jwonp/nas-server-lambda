@@ -45,6 +45,17 @@ itemDELETE:
           name: customAuthorizer        
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+itemFolderDELETE:
+  handler: src/api/storage/item/folder/DELETE.handler
+  description: delete user folder
+  events:
+    - httpApi:
+        path: /storage/item/folder
+        method: delete
+        authorizer:
+          name: customAuthorizer   
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 directoryCheckGET:
   handler: src/api/storage/directory/check.handler

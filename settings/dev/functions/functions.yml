@@ -11,5 +11,6 @@ functions:
   metaTitlePATCH: ${file(./settings/dev/functions/controllers/storages.yml):metaTitlePATCH}
   itemGET: ${file(./settings/dev/functions/controllers/storages.yml):itemGET}
   itemDELETE: ${file(./settings/dev/functions/controllers/storages.yml):itemDELETE}
+  itemFolderDELETE: ${file(./settings/dev/functions/controllers/storages.yml):itemFolderDELETE}
   directoryCheckGET: ${file(./settings/dev/functions/controllers/storages.yml):directoryCheckGET}
   directoryHistoryGET: ${file(./settings/dev/functions/controllers/storages.yml):directoryHistoryGET}
