@@ -7,6 +7,8 @@ import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
 import { FIREBASE_COLLECTION } from "../../../../libs/firebase/collections";
 import { VolumeSize } from "../../../../entity/Volume";
 import { FieldValue } from "firebase-admin/firestore";
+import { getStartsWithCode } from "../../../../libs/firebase/FirebaseUtils";
+import { MetaData } from "../../../../types/MetaData";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -22,7 +24,10 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     response.statusCode = 400;
     return response;
   }
-  const { fileId, fileSize, userId, directory } = JSON.parse(event.body);
+  const { fileId, userId, directory } = JSON.parse(event.body);
+
+  console.log(`fielId : ${fileId}`);
+  // 유저의 저장 공간 확인
   const userVolumeDocs = await db
     .collection(FIREBASE_COLLECTION.USERS)
     .doc(userId)
@@ -38,59 +43,97 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     response.statusCode = 400;
     return response;
   }
-  console.log(fileId);
-  const targetFilest = await db
+  ///
+
+  // 삭제하려는 파일 가져오기
+  const storageRef = db
     .collection(FIREBASE_COLLECTION.USERS)
     .doc(userId)
-    .collection(FIREBASE_COLLECTION.STORAGES).where("directory");
-  const command = new DeleteObjectsCommand({
-    Bucket: process.env.BUCKET_NAME as string,
-    Delete: {
-      Objects: [
-        {
-          Key: fileId,
-        },
-      ],
-    },
-  });
+    .collection(FIREBASE_COLLECTION.STORAGES);
+  const folder = (await storageRef.where("key", "==", fileId).get()).docs.map(
+    (doc) => doc.id
+  )[0];
 
-  try {
-    const response = await client.send(command);
-    console.log(response);
-  } catch (err) {
-    console.error(err);
-  }
+  const searchQuery = `${directory === "/" ? "" : directory}/${
+    (fileId as string).split("folder$", 2)[1]
+  }`;
+  const searchQueryCodes = getStartsWithCode(searchQuery);
+  const targetDocs = await storageRef
 
-  const deleteDocs = await db
-    .collection(FIREBASE_COLLECTION.USERS)
-    .doc(userId)
-    .collection(FIREBASE_COLLECTION.STORAGES)
-    .where("key", "==", fileId)
+    .where("directory", ">=", searchQueryCodes.startCode)
+    .where("directory", "<", searchQueryCodes.endCode)
     .get();
-  if (deleteDocs.size !== 1) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "Target file is not unique" });
-    return response;
+  const files = targetDocs.docs.map((doc) => doc.data() as unknown as MetaData);
+  console.log(files);
+  const batch = db.batch();
+
+  if (files.length > 0) {
+    const command = new DeleteObjectsCommand({
+      Bucket: process.env.BUCKET_NAME as string,
+      Delete: {
+        Objects: files
+          .filter((file) => !(file.type === "folder" && file.size === 0))
+          .map((file) => {
+            return { Key: file.key };
+          }),
+      },
+    });
+    ///
+
+    // S3에 파일 삭제 요청
+    try {
+      const { Deleted } = await client.send(command);
+      console.log(Deleted);
+    } catch (err) {
+      console.error(err);
+      response.statusCode = 500;
+      response.body = JSON.stringify({ error: "Fail to delete files" });
+      return response;
+    }
+
+    ///
+
+    // 삭제한 파일 메타 데이터 불러오기
+    const deleteDocs = await storageRef
+      .where(
+        "key",
+        "in",
+        files.map((file) => file.key)
+      )
+      .get();
+
+    const targetFileMetas = deleteDocs.docs.map((doc) => {
+      return { id: doc.id, fileSize: (doc.data() as unknown as MetaData).size };
+    });
+    console.log(targetFileMetas);
+
+    targetFileMetas.forEach((meta) => {
+      batch.delete(storageRef.doc(meta.id));
+    });
+
+    const userVolumeDocId = userVolumeDocs.docs.map((doc) => doc.id)[0];
+
+    const fileTotalSize = targetFileMetas
+      .map((meta) => meta.fileSize)
+      .reduce((acc, cur) => acc + cur, 0);
+    batch.update(
+      db
+        .collection(FIREBASE_COLLECTION.USERS)
+        .doc(userId)
+        .collection(FIREBASE_COLLECTION.VOLUME)
+        .doc(userVolumeDocId),
+      {
+        now: FieldValue.increment(-1 * fileTotalSize),
+      }
+    );
   }
+  ///
 
-  const target = deleteDocs.docs.map((doc) => doc.id)[0];
-  console.log(target);
-  db.collection(FIREBASE_COLLECTION.USERS)
-    .doc(userId)
-    .collection(FIREBASE_COLLECTION.STORAGES)
-    .doc(target)
-    .delete();
+  // 불러온 메타 데이터 일괄 삭제 요청
 
-  const userVolumeDocId = userVolumeDocs.docs.map((doc) => doc.id)[0];
-  const userVolume = userVolumeDocs.docs.map((doc) =>
-    doc.data()
-  )[0] as VolumeSize;
+  batch.delete(storageRef.doc(folder));
 
-  db.collection(FIREBASE_COLLECTION.USERS)
-    .doc(userId)
-    .collection(FIREBASE_COLLECTION.VOLUME)
-    .doc(userVolumeDocId)
-    .update({ now: FieldValue.increment(-1 * fileSize) });
+  await batch.commit();
 
   return response;
 };
