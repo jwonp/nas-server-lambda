@@ -32,7 +32,28 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   }
 
   const userDocId = (payload as JwtPayload).id;
-  console.log(`path is ${path ?? "root"}`);
+
+  if (path !== "") {
+    const splitedPath = (path as string).split("/");
+
+    const folder = `folder$${(splitedPath.pop() as string)}`;
+    const directory = splitedPath.join("/");
+
+    const pathCheckDocs = await db
+      .collection(FIREBASE_COLLECTION.USERS)
+      .doc(userDocId)
+      .collection(FIREBASE_COLLECTION.STORAGES)
+      .where("directory", "==", directory)
+      .where("key", "==", folder)
+      .get();
+    if (pathCheckDocs.size === 0) {
+      response.body = JSON.stringify({ error: "Invaild Directory" });
+      response.statusCode = 404;
+      return response;
+    }
+  }
+
+  
   const fileDocs = await db
     .collection(FIREBASE_COLLECTION.USERS)
     .doc(userDocId)

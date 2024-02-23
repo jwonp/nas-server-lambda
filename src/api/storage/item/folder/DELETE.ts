@@ -5,7 +5,7 @@ import * as serviceAccount from "../../../../../firebase-admin-key.json";
 import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { FIREBASE_COLLECTION } from "../../../../libs/firebase/collections";
-import { VolumeSize } from "../../../../entity/Volume";
+
 import { FieldValue } from "firebase-admin/firestore";
 import { getStartsWithCode } from "../../../../libs/firebase/FirebaseUtils";
 import { MetaData } from "../../../../types/MetaData";

@@ -33,9 +33,10 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     return response;
   }
   const userDocId = (payload as JwtPayload).id;
+  
   const histories = path
     ?.split("/")
-    .filter((_, index) => index !== 0)
+    // .filter((_, index) => index !== 0)
     .map((history) => `folder$${history}`);
   console.log(histories);
   const docs = await db
@@ -46,9 +47,14 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .get();
   const result = docs.docs.map((doc) => doc.data()) as MetaData[];
   console.log(result);
+  if (histories?.length !== result.length) {
+    response.statusCode = 404;
+    response.body = JSON.stringify({ error: "Invaild Directory" });
+    return response;
+  }
   const displayHistories = result.map((doc) => {
     return { key: doc.key, title: doc.fileName };
   });
-  response.body = JSON.stringify(displayHistories);
+  response.body = JSON.stringify({ historys: displayHistories });
   return response;
 };
