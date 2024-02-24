@@ -47,16 +47,6 @@ itemFolderDELETE:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-directoryCheckGET:
-  handler: src/api/storage/directory/check.handler
-  description: check the directory is existed
-  events:
-    - httpApi:
-        path: /storage/directory/check
-        method: get
-  url:
-    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-
 directoryHistoryGET:
   handler: src/api/storage/directory/history.handler
   description: get display directory list 
