@@ -47,12 +47,3 @@ itemFolderDELETE:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-directoryHistoryGET:
-  handler: src/api/storage/directory/history.handler
-  description: get display directory list 
-  events:
-    - httpApi:
-        path: /storage/directory/history
-        method: get
-  url:
-    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
