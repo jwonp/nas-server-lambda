@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import admin, { auth } from "firebase-admin";
+import admin from "firebase-admin";
 import * as serviceAccount from "../../../../firebase-admin-key.json";
 import { FIREBASE_COLLECTION } from "../../../libs/firebase/collections";
 import { getPayloadInJWT } from "../../../libs/JWTparser";

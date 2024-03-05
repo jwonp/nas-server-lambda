@@ -6,6 +6,8 @@ functions:
   signin: ${file(./settings/dev/functions/controllers/users.yml):signin}
   signup: ${file(./settings/dev/functions/controllers/users.yml):signup}
   volume: ${file(./settings/dev/functions/controllers/users.yml):volume}
+  favoritePOST: ${file(./settings/production/functions/controllers/users.yml):favoritePOST}
+  favoriteGET: ${file(./settings/production/functions/controllers/users.yml):favoriteGET}
   # /storage/**
   metaPOST: ${file(./settings/dev/functions/controllers/storages.yml):metaPOST}
   metaTitlePATCH: ${file(./settings/dev/functions/controllers/storages.yml):metaTitlePATCH}
