@@ -37,13 +37,23 @@ favoritePOST:
         method: post
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-    
+
 favoriteGET:
   handler: src/api/user/favorite/GET.handler
   description: get user`s fovorite folders
   events:
     - httpApi:
         path: /user/favorite
+        method: get
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+search:
+  handler: src/api/user/search.handler
+  description: get users by query
+  events:
+    - httpApi:
+        path: /user/search
         method: get
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
