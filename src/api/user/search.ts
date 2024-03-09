@@ -33,7 +33,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     return response;
   }
 
-  const userDocId = (payload as JwtPayload).id;
+
 
   if (!query) {
     response.statusCode = 400;

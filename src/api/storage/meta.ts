@@ -30,7 +30,10 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     return response;
   }
   const userDocId = (payload as JwtPayload).id;
-  const metas: MetaData[] = JSON.parse(event.body) as MetaData[];
+  const metas: Omit<MetaData, "isFavorite">[] = JSON.parse(event.body) as Omit<
+    MetaData,
+    "isFavorite"
+  >[];
   console.log(metas);
   const userVolumeDocs = await db
     .collection(FIREBASE_COLLECTION.USERS)
@@ -74,7 +77,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
         .doc(meta.ownerId)
         .collection(FIREBASE_COLLECTION.STORAGES)
         .doc(),
-      rest: rest,
+      rest: { ...rest, isFavorite: false },
     };
   });
   metaRef.forEach((meta) => {

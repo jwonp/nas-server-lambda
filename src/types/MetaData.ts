@@ -11,6 +11,7 @@ export type MetaData = {
   uploadTime: number;
   type: FileType;
   size: number;
+  isFavorite:boolean;
 };
 
 export const fileTypes = {

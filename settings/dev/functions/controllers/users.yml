@@ -27,26 +27,7 @@ volume:
         method: get
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-    
-favoritePOST:
-  handler: src/api/user/favorite/POST.handler
-  description: add user`s favorite folder
-  events:
-    - httpApi:
-        path: /user/favorite
-        method: post
-  url:
-    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-favoriteGET:
-  handler: src/api/user/favorite/GET.handler
-  description: get user`s fovorite folders
-  events:
-    - httpApi:
-        path: /user/favorite
-        method: get
-  url:
-    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 search:
   handler: src/api/user/search.handler

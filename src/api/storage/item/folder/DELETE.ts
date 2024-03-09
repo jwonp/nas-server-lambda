@@ -54,28 +54,33 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     (doc) => doc.id
   )[0];
 
-  const searchQuery = `${directory === "/" ? "" : directory}/${
+  const searchQuery = `${directory}/${
     (fileId as string).split("folder$", 2)[1]
   }`;
+  console.log(`search query is ${searchQuery}`);
   const searchQueryCodes = getStartsWithCode(searchQuery);
   const targetDocs = await storageRef
-
     .where("directory", ">=", searchQueryCodes.startCode)
     .where("directory", "<", searchQueryCodes.endCode)
     .get();
   const files = targetDocs.docs.map((doc) => doc.data() as unknown as MetaData);
-  console.log(files);
+  console.log(
+    `target files : ${files
+      .map((file) => `${file.type}#${file.fileName}`)
+      .join(", ")}`
+  );
   const batch = db.batch();
 
-  if (files.length > 0) {
+  const filesWithoutFolders = files.filter(
+    (file) => !(file.type === "folder" && file.size === 0)
+  );
+  if (filesWithoutFolders.length > 0) {
     const command = new DeleteObjectsCommand({
       Bucket: process.env.BUCKET_NAME as string,
       Delete: {
-        Objects: files
-          .filter((file) => !(file.type === "folder" && file.size === 0))
-          .map((file) => {
-            return { Key: file.key };
-          }),
+        Objects: filesWithoutFolders.map((file) => {
+          return { Key: file.key };
+        }),
       },
     });
     ///
