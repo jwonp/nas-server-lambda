@@ -1,0 +1,29 @@
+shareUserPOST:
+  handler: src/api/user/share/POST.handler
+  description: add user to share
+  events:
+    - httpApi:
+        path: /user/share
+        method: post
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+shareUserGET:
+  handler: src/api/user/share/GET.handler
+  description: get users who have registed to share
+  events:
+    - httpApi:
+        path: /user/share
+        method: get
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+shareUserAlertGET:
+  handler: src/api/user/share/alert/GET.handler
+  description: get share requests
+  events:
+    - httpApi:
+        path: /user/share/alert
+        method: get
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
