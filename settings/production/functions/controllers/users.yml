@@ -8,8 +8,8 @@ signin:
           authorizer:
             name: customAuthorizer
 
-    # url:
-    #   cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+    url:
+      cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 signup:
   handler: src/api/user/signup.handler
@@ -35,22 +35,12 @@ volume:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-favoritePOST:
-  handler: src/api/user/favorite/POST.handler
-  description: add user`s favorite folder
+search:
+  handler: src/api/user/search.handler
+  description: get users by query
   events:
     - httpApi:
-        path: /user/favorite
-        method: post
-  url:
-    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-favoriteGET:
-  handler: src/api/user/favorite/GET.handler
-  description: get user`s fovorite folders
-  events:
-    - httpApi:
-        path: /user/favorite
+        path: /user/search
         method: get
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-    

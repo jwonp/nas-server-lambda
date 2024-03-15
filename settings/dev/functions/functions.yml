@@ -14,5 +14,5 @@ functions:
   itemGET: ${file(./settings/dev/functions/controllers/storages.yml):itemGET}
   itemDELETE: ${file(./settings/dev/functions/controllers/storages.yml):itemDELETE}
   itemFolderDELETE: ${file(./settings/dev/functions/controllers/storages.yml):itemFolderDELETE}
-  favoritePOST: ${file(./settings/dev/functions/controllers/storages.yml):favoritePOST}
+  favoritePUT: ${file(./settings/dev/functions/controllers/storages.yml):favoritePUT}
   favoriteGET: ${file(./settings/dev/functions/controllers/storages.yml):favoriteGET}

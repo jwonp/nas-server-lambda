@@ -37,6 +37,7 @@ itemDELETE:
         method: delete
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+    
 itemFolderDELETE:
   handler: src/api/storage/item/folder/DELETE.handler
   description: delete user folder
@@ -47,14 +48,13 @@ itemFolderDELETE:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-    
-favoritePOST:
-  handler: src/api/storage/item/favorite/POST.handler
+favoritePUT:
+  handler: src/api/storage/item/favorite/PUT.handler
   description: add user`s favorite folder
   events:
     - httpApi:
         path: /storage/item/favorite
-        method: post
+        method: put
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 

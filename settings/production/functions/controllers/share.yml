@@ -17,3 +17,4 @@ shareUserGET:
         method: get
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+

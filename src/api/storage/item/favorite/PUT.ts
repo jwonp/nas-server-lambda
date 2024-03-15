@@ -4,6 +4,7 @@ import * as serviceAccount from "../../../../../firebase-admin-key.json";
 import { getPayloadInJWT } from "../../../../libs/JWTparser";
 import { JwtPayload } from "jsonwebtoken";
 import { FIREBASE_COLLECTION } from "../../../../libs/firebase/collections";
+import { MetaData } from "../../../../types/MetaData";
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
 });
@@ -44,19 +45,35 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.USERS)
     .doc(userDocId)
     .collection(FIREBASE_COLLECTION.STORAGES);
-  const favoriteDocs = await storageRef
-    .where("key", "==", favoriteFolder.folder)
-    .get();
 
-  if (favoriteDocs.size !== 1) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "Invaild folder" });
+  try {
+    await db.runTransaction(async (t) => {
+      const favoriteDocs = await t.get(
+        storageRef.where("key", "==", favoriteFolder.folder)
+      );
+
+      if (favoriteDocs.size !== 1) {
+        response.statusCode = 400;
+        response.body = JSON.stringify({ error: "Invaild folder" });
+        return response;
+      }
+      const storedFavoriteFolder = favoriteDocs.docs.map((doc) => {
+        return { id: doc.id, isFavorite: (doc.data() as MetaData).isFavorite };
+      })[0];
+      console.log(
+        `storage favorite folder ${storedFavoriteFolder.id} ${storedFavoriteFolder.isFavorite}`
+      );
+      t.update(storageRef.doc(storedFavoriteFolder.id), {
+        isFavorite: !storedFavoriteFolder.isFavorite,
+      });
+    });
+  } catch (e) {
+    response.statusCode = 500;
+    response.body = JSON.stringify({
+      error: "Error occured during mutate isFavorite",
+    });
     return response;
   }
-
-  const storedFavoriteFolderId = favoriteDocs.docs.map((doc) => doc.id)[0];
-
-  await storageRef.doc(storedFavoriteFolderId).update({ isFavorite: true });
 
   return response;
 };

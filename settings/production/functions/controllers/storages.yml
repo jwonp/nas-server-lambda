@@ -45,6 +45,7 @@ itemDELETE:
           name: customAuthorizer        
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
 itemFolderDELETE:
   handler: src/api/storage/item/folder/DELETE.handler
   description: delete user folder
@@ -52,6 +53,30 @@ itemFolderDELETE:
     - httpApi:
         path: /storage/item/folder
         method: delete
+        authorizer:
+          name: customAuthorizer   
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+favoritePUT:
+  handler: src/api/storage/item/favorite/PUT.handler
+  description: add user`s favorite folder
+  events:
+    - httpApi:
+        path: /storage/item/favorite
+        method: put
+        authorizer:
+          name: customAuthorizer   
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+favoriteGET:
+  handler: src/api/storage/item/favorite/GET.handler
+  description: get user`s fovorite folders
+  events:
+    - httpApi:
+        path: /storage/item/favorite
+        method: get
         authorizer:
           name: customAuthorizer   
   url:
