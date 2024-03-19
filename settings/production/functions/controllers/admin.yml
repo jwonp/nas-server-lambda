@@ -1,0 +1,38 @@
+check:
+  handler: src/api/admin/check.handler
+  description: check admin by doc id
+  events:
+    - httpApi:
+        path: /admin/check
+        method: get
+        authorizer:
+          name: nas-server-authorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+
+temporaryGET:
+  handler: src/api/admin/account/temporary/GET.handler
+  description: get all of temporary account
+  events:
+    - httpApi:
+        path: /admin/account/temporary
+        method: get
+        authorizer:
+          name: nas-server-authorizer        
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+    
+temporaryPOST:
+  handler: src/api/admin/account/temporary/POST.handler
+  description: add temporary account
+  events:
+    - httpApi:
+        path: /admin/account/temporary
+        method: post
+        authorizer:
+          name: nas-server-authorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+

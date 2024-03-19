@@ -1,15 +1,15 @@
 signin:
-    handler: src/api/user/signin.handler
-    description: authorize user. Entity 'UserDetail' is required.
-    events:
-      - httpApi:
-          path: /user/signin
-          method: post
-          authorizer:
-            name: customAuthorizer
+  handler: src/api/user/signin.handler
+  description: authorize user. Entity 'UserDetail' is required.
+  events:
+    - httpApi:
+        path: /user/signin
+        method: post
+        authorizer:
+          name: nas-server-authorizer
 
-    url:
-      cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 signup:
   handler: src/api/user/signup.handler
@@ -19,10 +19,10 @@ signup:
         path: /user/signup
         method: post
         authorizer:
-          name: customAuthorizer
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-    
+
 volume:
   handler: src/api/user/volume.handler
   description: get user`s volume detail
@@ -31,7 +31,7 @@ volume:
         path: /user/volume
         method: get
         authorizer:
-          name: customAuthorizer
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -42,5 +42,19 @@ search:
     - httpApi:
         path: /user/search
         method: get
+        authorizer:
+          name: nas-server-authorizer
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+accountTemporary:
+  handler: src/api/user/account/temporary.handler
+  description: add tempoary account
+  events:
+    - httpApi:
+        path: /user/account/temporary
+        method: post
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}

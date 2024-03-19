@@ -18,7 +18,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       body: JSON.stringify({ error: "No request body" }),
     };
   }
-  const userDetail = JSON.parse(event.body) as UserDetail;
+  const userDetail = JSON.parse(event.body) as Omit<UserDetail,"id">;
 
   const response: APIGatewayProxyResult = {
     statusCode: 200,

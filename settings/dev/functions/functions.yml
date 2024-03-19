@@ -6,8 +6,8 @@ functions:
   signin: ${file(./settings/dev/functions/controllers/users.yml):signin}
   signup: ${file(./settings/dev/functions/controllers/users.yml):signup}
   volume: ${file(./settings/dev/functions/controllers/users.yml):volume}
-
   search: ${file(./settings/dev/functions/controllers/users.yml):search}
+  accountTemporary: ${file(./settings/dev/functions/controllers/users.yml):accountTemporary}
   # /storage/**
   metaPOST: ${file(./settings/dev/functions/controllers/storages.yml):metaPOST}
   metaTitlePATCH: ${file(./settings/dev/functions/controllers/storages.yml):metaTitlePATCH}
@@ -16,3 +16,10 @@ functions:
   itemFolderDELETE: ${file(./settings/dev/functions/controllers/storages.yml):itemFolderDELETE}
   favoritePUT: ${file(./settings/dev/functions/controllers/storages.yml):favoritePUT}
   favoriteGET: ${file(./settings/dev/functions/controllers/storages.yml):favoriteGET}
+  # /share/**
+  shareUserPOST: ${file(./settings/dev/functions/controllers/share.yml):shareUserPOST}
+  shareUserGET: ${file(./settings/dev/functions/controllers/share.yml):shareUserGET}
+  # /admin/**
+  check: ${file(./settings/dev/functions/controllers/admin.yml):check}
+  temporaryGET: ${file(./settings/dev/functions/controllers/admin.yml):temporaryGET}
+  temporaryPOST: ${file(./settings/dev/functions/controllers/admin.yml):temporaryPOST}

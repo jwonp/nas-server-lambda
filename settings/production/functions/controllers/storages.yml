@@ -6,7 +6,7 @@ metaPOST:
         path: /storage/meta
         method: post
         authorizer:
-          name: customAuthorizer
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -17,8 +17,8 @@ metaTitlePATCH:
     - httpApi:
         path: /storage/meta/title
         method: patch
-        authorizer: 
-          name: customAuthorizer
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -30,7 +30,7 @@ itemGET:
         path: /storage/item
         method: get
         authorizer:
-          name: customAuthorizer        
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -42,7 +42,7 @@ itemDELETE:
         path: /storage/item
         method: delete
         authorizer:
-          name: customAuthorizer        
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -54,19 +54,19 @@ itemFolderDELETE:
         path: /storage/item/folder
         method: delete
         authorizer:
-          name: customAuthorizer   
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 favoritePUT:
   handler: src/api/storage/item/favorite/PUT.handler
-  description: add user`s favorite folder
+  description: mutate user`s favorite folder
   events:
     - httpApi:
         path: /storage/item/favorite
         method: put
         authorizer:
-          name: customAuthorizer   
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -78,6 +78,6 @@ favoriteGET:
         path: /storage/item/favorite
         method: get
         authorizer:
-          name: customAuthorizer   
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}

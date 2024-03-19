@@ -13,7 +13,9 @@ export async function handler(event: APIGatewayProxyEvent) {
     //@ts-ignore
     event.requestContext.http.path === "/user/signin" ||
     //@ts-ignore
-    event.requestContext.http.path === "/user/signup"
+    event.requestContext.http.path === "/user/signup"||
+    //@ts-ignore
+    event.requestContext.http.path === "/user/account/temporary"
   ) {
     response.isAuthorized = true;
     return response;

@@ -1,12 +1,12 @@
 signin:
-    handler: src/api/user/signin.handler
-    description: authorize user. Entity 'UserDetail' is required.
-    events:
-      - httpApi:
-          path: /user/signin
-          method: post
-    # url:
-    #   cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+  handler: src/api/user/signin.handler
+  description: authorize user. Entity 'UserDetail' is required.
+  events:
+    - httpApi:
+        path: /user/signin
+        method: post
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 signup:
   handler: src/api/user/signup.handler
@@ -15,9 +15,9 @@ signup:
     - httpApi:
         path: /user/signup
         method: post
-  # url:
-  #   cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-    
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
 volume:
   handler: src/api/user/volume.handler
   description: get user`s volume detail
@@ -28,7 +28,6 @@ volume:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-
 search:
   handler: src/api/user/search.handler
   description: get users by query
@@ -36,5 +35,15 @@ search:
     - httpApi:
         path: /user/search
         method: get
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+accountTemporary:
+  handler: src/api/user/account/temporary.handler
+  description: get users by query
+  events:
+    - httpApi:
+        path: /user/account/temporary
+        method: post
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}

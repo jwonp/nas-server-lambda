@@ -6,8 +6,8 @@ functions:
   signin: ${file(./settings/production/functions/controllers/users.yml):signin}
   signup: ${file(./settings/production/functions/controllers/users.yml):signup}
   volume: ${file(./settings/production/functions/controllers/users.yml):volume}
-  favoritePOST: ${file(./settings/production/functions/controllers/users.yml):favoritePOST}
-  favoriteGET: ${file(./settings/production/functions/controllers/users.yml):favoriteGET}
+  search: ${file(./settings/production/functions/controllers/users.yml):search}
+  accountTemporary: ${file(./settings/production/functions/controllers/users.yml):accountTemporary}
   # /storage/**
   metaPOST: ${file(./settings/production/functions/controllers/storages.yml):metaPOST}
   metaTitlePATCH: ${file(./settings/production/functions/controllers/storages.yml):metaTitlePATCH}
@@ -16,3 +16,10 @@ functions:
   itemFolderDELETE: ${file(./settings/production/functions/controllers/storages.yml):itemFolderDELETE}
   favoritePUT: ${file(./settings/production/functions/controllers/storages.yml):favoritePUT}
   favoriteGET: ${file(./settings/production/functions/controllers/storages.yml):favoriteGET}
+  # /share/**
+  shareUserPOST: ${file(./settings/production/functions/controllers/share.yml):shareUserPOST}
+  shareUserGET: ${file(./settings/production/functions/controllers/share.yml):shareUserGET}
+  # /admin/**
+  check: ${file(./settings/production/functions/controllers/admin.yml):check}
+  temporaryGET: ${file(./settings/production/functions/controllers/admin.yml):temporaryGET}
+  temporaryPOST: ${file(./settings/production/functions/controllers/admin.yml):temporaryPOST}

@@ -40,7 +40,8 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.USERS)
     .where("username", "==", userDetail.username)
     .get();
-
+  console.log(`username ${userDetail.username}`);
+  console.log(storedUserDetailDocs.docs.map((doc) => doc.data()));
   if (storedUserDetailDocs.size !== 1) {
     response.statusCode === 400;
     response.body = JSON.stringify({ error: "No matched user detail" });
@@ -53,15 +54,23 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       ...(doc.data() as Omit<UserDetail, "id">),
     };
   })[0];
-  const storedUserVolumeDocs = await db
+  const volumeRef = db
     .collection(FIREBASE_COLLECTION.USERS)
     .doc(storedUserDetail.id)
-    .collection(FIREBASE_COLLECTION.VOLUME)
-    .get();
+    .collection(FIREBASE_COLLECTION.VOLUME);
+  const storedUserVolumeDocs = await volumeRef.get();
   if (storedUserVolumeDocs.size !== 1) {
-    response.statusCode === 400;
-    response.body = JSON.stringify({ error: "No matched user volume" });
-    return response;
+    if (storedUserVolumeDocs.empty === false) {
+      response.statusCode === 400;
+      response.body = JSON.stringify({ error: "No matched user volume" });
+      return response;
+    }
+    const initVolumeSize = 128 * 1024 * 1024;
+    const initVolume: VolumeSize = {
+      max: initVolumeSize,
+      now: 0,
+    };
+    await volumeRef.add(initVolume);
   }
   const storedUserVolume = storedUserVolumeDocs.docs.map((doc) =>
     doc.data()
