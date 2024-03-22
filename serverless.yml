@@ -4,8 +4,8 @@ service: nas-server-lambda
 frameworkVersion: "3"
 configValidationMode: error
 
-provider: ${file(./settings/production/provider.yml):provider}
-functions: ${file(./settings/production/functions/functions.yml):functions}
+provider: ${file(./settings/dev/provider.yml):provider}
+functions: ${file(./settings/dev/functions/functions.yml):functions}
 
 plugins:
   - serverless-plugin-typescript

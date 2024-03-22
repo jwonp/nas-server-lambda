@@ -1,3 +1,4 @@
+# users
 check:
   handler: src/api/admin/check.handler
   description: check admin by doc id
@@ -8,25 +9,63 @@ check:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-
-temporaryGET:
-  handler: src/api/admin/account/temporary/GET.handler
+usersTemporaryGET:
+  handler: src/api/admin/users/temporary/GET.handler
   description: get all of temporary account
   events:
     - httpApi:
-        path: /admin/account/temporary
+        path: /admin/users/temporary
         method: get
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
-    
-temporaryPOST:
-  handler: src/api/admin/account/temporary/POST.handler
+
+usersTemporaryPOST:
+  handler: src/api/admin/users/temporary/POST.handler
   description: add temporary account
   events:
     - httpApi:
-        path: /admin/account/temporary
+        path: /admin/users/temporary
         method: post
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
+# storages
+storagesTempMetaDELETE:
+  handler: src/api/admin/storages/temp/meta/DELETE.handler
+  description: delete metas and files
+  events:
+    - httpApi:
+        path: /admin/storages/temp/meta
+        method: delete
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
+storagesTempMetaPUT:
+  handler: src/api/admin/storages/temp/meta/PUT.handler
+  description: update changed file metas
+  events:
+    - httpApi:
+        path: /admin/storages/temp/meta
+        method: put
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+storagesTempMetaPOST:
+  handler: src/api/admin/storages/temp/meta/POST.handler
+  description: add temp file metas
+  events:
+    - httpApi:
+        path: /admin/storages/temp/meta
+        method: post
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+
+storagesTempMetaGET:
+  handler: src/api/admin/storages/temp/meta/GET.handler
+  description: get temp file metas
+  events:
+    - httpApi:
+        path: /admin/storages/temp/meta
+        method: get
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}

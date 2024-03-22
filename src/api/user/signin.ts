@@ -6,6 +6,7 @@ import admin from "firebase-admin";
 import * as serviceAccount from "../../../firebase-admin-key.json";
 import { UserDetail } from "../../entity/UserDetail";
 import { VolumeSize } from "../../entity/Volume";
+import { createResponse } from "../../libs/ResponseBuilder";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -40,8 +41,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.USERS)
     .where("username", "==", userDetail.username)
     .get();
-  console.log(`username ${userDetail.username}`);
-  console.log(storedUserDetailDocs.docs.map((doc) => doc.data()));
+
   if (storedUserDetailDocs.size !== 1) {
     response.statusCode === 400;
     response.body = JSON.stringify({ error: "No matched user detail" });
@@ -51,9 +51,14 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const storedUserDetail = storedUserDetailDocs.docs.map((doc) => {
     return {
       id: doc.id,
-      ...(doc.data() as Omit<UserDetail, "id">),
+      ...(doc.data() as Omit<UserDetail, "id"> & { expiredIn?: number }),
     };
   })[0];
+
+  if (storedUserDetail.expiredIn && storedUserDetail.expiredIn < Date.now()) {
+    return createResponse(403, { status: 403, msg: "This account is expired" });
+  }
+
   const volumeRef = db
     .collection(FIREBASE_COLLECTION.USERS)
     .doc(storedUserDetail.id)

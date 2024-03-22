@@ -21,5 +21,11 @@ functions:
   shareUserGET: ${file(./settings/dev/functions/controllers/share.yml):shareUserGET}
   # /admin/**
   check: ${file(./settings/dev/functions/controllers/admin.yml):check}
-  temporaryGET: ${file(./settings/dev/functions/controllers/admin.yml):temporaryGET}
-  temporaryPOST: ${file(./settings/dev/functions/controllers/admin.yml):temporaryPOST}
+  # /admin/users/**
+  usersTemporaryGET: ${file(./settings/dev/functions/controllers/admin.yml):usersTemporaryGET}
+  usersTemporaryPOST: ${file(./settings/dev/functions/controllers/admin.yml):usersTemporaryPOST}
+  # /admin/storages/**
+  storagesTempMetaDELETE: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaDELETE}
+  storagesTempMetaPUT: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaPUT}
+  storagesTempMetaPOST: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaPOST}
+  storagesTempMetaGET: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaGET}
