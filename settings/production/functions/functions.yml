@@ -20,12 +20,12 @@ functions:
   shareUserPOST: ${file(./settings/production/functions/controllers/share.yml):shareUserPOST}
   shareUserGET: ${file(./settings/production/functions/controllers/share.yml):shareUserGET}
   # /admin/**
-  check: ${file(./settings/dev/functions/controllers/admin.yml):check}
+  check: ${file(./settings/production/functions/controllers/admin.yml):check}
   # /admin/users/**
-  usersTemporaryGET: ${file(./settings/dev/functions/controllers/admin.yml):usersTemporaryGET}
-  usersTemporaryPOST: ${file(./settings/dev/functions/controllers/admin.yml):usersTemporaryPOST}
+  usersTemporaryGET: ${file(./settings/production/functions/controllers/admin.yml):usersTemporaryGET}
+  usersTemporaryPOST: ${file(./settings/production/functions/controllers/admin.yml):usersTemporaryPOST}
   # /admin/storages/**
-  storagesTempMetaDELETE: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaDELETE}
-  storagesTempMetaPUT: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaPUT}
-  storagesTempMetaPOST: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaPOST}
-  storagesTempMetaGET: ${file(./settings/dev/functions/controllers/admin.yml):storagesTempMetaGET}
+  storagesTempMetaDELETE: ${file(./settings/production/functions/controllers/admin.yml):storagesTempMetaDELETE}
+  storagesTempMetaPUT: ${file(./settings/production/functions/controllers/admin.yml):storagesTempMetaPUT}
+  storagesTempMetaPOST: ${file(./settings/production/functions/controllers/admin.yml):storagesTempMetaPOST}
+  storagesTempMetaGET: ${file(./settings/production/functions/controllers/admin.yml):storagesTempMetaGET}
