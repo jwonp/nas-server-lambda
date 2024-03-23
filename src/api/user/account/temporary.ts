@@ -106,7 +106,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
         };
       }
     });
-
   } catch (error) {
     return createResponse(500, {
       ststus: 500,
@@ -251,7 +250,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       });
       return newMeta;
     });
-   
+
     batch.set(volumeRef, {
       max: initVolumeSize,
       now: itemMetas
@@ -273,12 +272,17 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
             CopySource: `/${process.env.BUCKET_NAME as string}/${meta.key}`,
             Key: copyToKey,
           });
-
+          console.log(
+            ` Bucket: ${process.env.BUCKET_NAME as string},
+            CopySource: ${`/${process.env.BUCKET_NAME as string}/${meta.key}`},
+            Key: ${copyToKey},`
+          );
           await client.send(command);
         }
       });
     } catch (err) {
       console.log(err);
+      console.log("Fail to copy object");
       return createResponse(500, {
         status: 500,
         msg: "Fail to copy template files",
