@@ -106,7 +106,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
         };
       }
     });
-    console.log(refIds ?? "Not created account");
+
   } catch (error) {
     return createResponse(500, {
       ststus: 500,
@@ -251,14 +251,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       });
       return newMeta;
     });
-    // console.log(
-    //   `item metas = ${itemMetas.map((meta) => `${meta.fileName}`).join(" / ")}`
-    // );
-
-    // itemMetas.forEach((meta) => {
-
-    // });
-
+   
     batch.set(volumeRef, {
       max: initVolumeSize,
       now: itemMetas
