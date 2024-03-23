@@ -277,7 +277,16 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
             CopySource: ${`/${process.env.BUCKET_NAME as string}/${meta.key}`},
             Key: ${copyToKey},`
           );
-          await client.send(command);
+          const res = await client.send(command);
+          console.log(
+            Object.entries(res.$metadata)
+              .map(([key, value]) => {
+                `${key} : ${value}`;
+              })
+              .forEach((str) => {
+                console.log(str);
+              })
+          );
         }
       });
     } catch (err) {
