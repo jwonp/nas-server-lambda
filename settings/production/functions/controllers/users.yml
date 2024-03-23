@@ -49,7 +49,7 @@ search:
 
 accountTemporary:
   handler: src/api/user/account/temporary.handler
-  description: add tempoary account
+  description: create tempoary account by code
   events:
     - httpApi:
         path: /user/account/temporary

@@ -213,7 +213,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
 
     const itemMetas = tempFileMetas.map((meta) => {
       const storageRef = userRef.collection(FIREBASE_COLLECTION.STORAGES).doc();
-      console.log(`${meta.key} | ${meta.fileName}`);
       const splitedDirectory = meta.directory.split("/");
       const directory = splitedDirectory
         .filter(
@@ -262,40 +261,30 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
 
     const fileMetas = tempFileMetas.filter((meta) => meta.type !== "folder");
 
-    try {
-      fileMetas.forEach(async (meta) => {
-        const copyToKey = fileKeyMap.get(meta.key);
-
-        if (copyToKey) {
-          const command = new CopyObjectCommand({
-            Bucket: process.env.BUCKET_NAME as string,
-            CopySource: `/${process.env.BUCKET_NAME as string}/${meta.key}`,
-            Key: copyToKey,
-          });
-          console.log(
-            ` Bucket: ${process.env.BUCKET_NAME as string},
-            CopySource: ${`/${process.env.BUCKET_NAME as string}/${meta.key}`},
-            Key: ${copyToKey},`
-          );
-          const res = await client.send(command);
-          console.log(
-            Object.entries(res.$metadata)
-              .map(([key, value]) => {
-                `${key} : ${value}`;
-              })
-              .forEach((str) => {
-                console.log(str);
-              })
-          );
-        }
+    for (let i = 0; i < fileMetas.length; i += 1) {
+      const meta = fileMetas[i];
+      const copyToKey = fileKeyMap.get(meta.key);
+      if (!copyToKey) {
+        continue;
+      }
+      const command = new CopyObjectCommand({
+        CopySource: `/${process.env.BUCKET_NAME as string}/${meta.key}`,
+        Bucket: process.env.BUCKET_NAME as string,
+        Key: copyToKey,
       });
-    } catch (err) {
-      console.log(err);
-      console.log("Fail to copy object");
-      return createResponse(500, {
-        status: 500,
-        msg: "Fail to copy template files",
-      });
+      try {
+        console.log(`${meta} copy`);
+        const res = await client.send(command);
+        console.log(res);
+        console.log(`${meta} copy end`);
+      } catch (err) {
+        return createResponse(500, {
+          status: 500,
+          msg: "Fail to copy template files",
+        });
+      } finally {
+        console.log("file is processed");
+      }
     }
   }
 

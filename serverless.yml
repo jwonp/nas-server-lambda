@@ -5,7 +5,7 @@ frameworkVersion: "3"
 configValidationMode: error
 
 provider: ${file(./settings/production/provider.yml):provider}
-functions: ${file(./settings/production/functions/functions.yml):functions}
+functions: ${file(./settings/produtcion/functions/functions.yml):functions}
 
 plugins:
   - serverless-plugin-typescript
