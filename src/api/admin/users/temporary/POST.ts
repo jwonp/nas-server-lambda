@@ -4,17 +4,11 @@ import admin from "firebase-admin";
 import * as serviceAccount from "../../../../../firebase-admin-key.json";
 import { JwtPayload } from "jsonwebtoken";
 import { getPayloadInJWT } from "../../../../libs/JWTparser";
-import {
-  decryptObject,
-  encryptObject,
-  encryptString,
-} from "../../../../libs/crypto";
+import { decryptObject, encryptObject } from "../../../../libs/crypto";
 import { createResponse } from "../../../../libs/ResponseBuilder";
 import { UserCredentials } from "../../../../types/UserCredentials";
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { TemporaryAccount } from "../../../../types/TemporaryAccount";
-import { AccountCodeObject } from "../../../../types/AccountCodeObject";
-import { UserDetail } from "../../../../entity/UserDetail";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -73,6 +67,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     ...parsedtemporaryAccount,
     expireIn: Date.now() + parsedtemporaryAccount.expireIn * ONE_DAY,
     isRegisted: false,
+    isGotTemplate:false,
     admin: userDocId,
   };
   try {
@@ -87,15 +82,20 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       .collection(FIREBASE_COLLECTION.TemporaryAccounts);
 
     await temporaryAccountRef.add(temporaryAccount);
-    const accountCodeObject:UserCredentials & {admin:string, expireIn:number} = {
+
+    const accountCodeObject: UserCredentials & {
+      admin: string;
+      expireIn: number;
+    } = {
       username: temporaryAccount.username,
       password: temporaryAccount.password,
       phone: temporaryAccount.phone,
       name: temporaryAccount.name,
       icon: temporaryAccount.icon,
-      admin:temporaryAccount.admin,
-      expireIn:temporaryAccount.expireIn
+      admin: temporaryAccount.admin,
+      expireIn: temporaryAccount.expireIn,
     };
+
     return createResponse(200, {
       accountCode: encryptObject(accountCodeObject),
     });

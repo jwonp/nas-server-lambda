@@ -16,6 +16,7 @@ functions:
   itemFolderDELETE: ${file(./settings/dev/functions/controllers/storages.yml):itemFolderDELETE}
   favoritePUT: ${file(./settings/dev/functions/controllers/storages.yml):favoritePUT}
   favoriteGET: ${file(./settings/dev/functions/controllers/storages.yml):favoriteGET}
+  
   # /share/**
   shareUserPOST: ${file(./settings/dev/functions/controllers/share.yml):shareUserPOST}
   shareUserGET: ${file(./settings/dev/functions/controllers/share.yml):shareUserGET}

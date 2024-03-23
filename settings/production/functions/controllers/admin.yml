@@ -10,7 +10,6 @@ check:
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
-
 usersTemporaryGET:
   handler: src/api/admin/users/temporary/GET.handler
   description: get all of temporary account
@@ -18,6 +17,8 @@ usersTemporaryGET:
     - httpApi:
         path: /admin/users/temporary
         method: get
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -28,6 +29,8 @@ usersTemporaryPOST:
     - httpApi:
         path: /admin/users/temporary
         method: post
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -39,6 +42,8 @@ storagesTempMetaDELETE:
     - httpApi:
         path: /admin/storages/temp/meta
         method: delete
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -49,6 +54,8 @@ storagesTempMetaPUT:
     - httpApi:
         path: /admin/storages/temp/meta
         method: put
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -59,6 +66,8 @@ storagesTempMetaPOST:
     - httpApi:
         path: /admin/storages/temp/meta
         method: post
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
@@ -69,5 +78,7 @@ storagesTempMetaGET:
     - httpApi:
         path: /admin/storages/temp/meta
         method: get
+        authorizer:
+          name: nas-server-authorizer
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}

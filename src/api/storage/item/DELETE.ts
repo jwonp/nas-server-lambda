@@ -5,7 +5,7 @@ import * as serviceAccount from "../../../../firebase-admin-key.json";
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { FIREBASE_COLLECTION } from "../../../libs/firebase/collections";
-import { VolumeSize } from "../../../entity/Volume";
+// import { VolumeSize } from "../../../entity/Volume";
 import { FieldValue } from "firebase-admin/firestore";
 
 const firebaseAdmin = admin.initializeApp({
@@ -73,9 +73,9 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .delete();
 
   const userVolumeDocId = userVolumeDocs.docs.map((doc) => doc.id)[0];
-  const userVolume = userVolumeDocs.docs.map((doc) =>
-    doc.data()
-  )[0] as VolumeSize;
+  // const userVolume = userVolumeDocs.docs.map((doc) =>
+  //   doc.data()
+  // )[0] as VolumeSize;
 
   db.collection(FIREBASE_COLLECTION.USERS)
     .doc(userId)
