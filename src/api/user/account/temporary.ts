@@ -60,7 +60,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       //발급한 admin id가 존재하지 않을 경우
       if (adminDoc.size !== 1) {
         return undefined;
-        // return createResponse(403, { status: 403, msg: "Invaild provider" });
       }
       const adminRefId = adminDoc.docs[0].id;
       const adminDocRef = adminDoc.docs.map((doc) => doc.ref)[0];
@@ -73,7 +72,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       //발급한 임시 계정이 존재하지 않을 경우
       if (temporaryAccountDocs.size !== 1) {
         return undefined;
-        // return createResponse(400, { status: 400, msg: "Invaild account" });
       }
 
       //임시 계정을 가져옴
