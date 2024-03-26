@@ -1,7 +1,8 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent } from "aws-lambda";
 import { FIREBASE_COLLECTION } from "../../../libs/firebase/collections";
 import admin from "firebase-admin";
 import * as serviceAccount from "../../../../firebase-admin-key.json";
+import { createResponse } from "../../../libs/ResponseBuilder";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -9,13 +10,8 @@ const firebaseAdmin = admin.initializeApp({
 const db = admin.firestore();
 
 exports.handler = async (event: APIGatewayProxyEvent) => {
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify({}),
-  };
   if (!event.body) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No body" });
   }
   const { fileId, userId, title } = JSON.parse(event.body);
   const ref = db
@@ -29,9 +25,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     return { id: doc.id, type: doc.data().type };
   });
   if (files.length !== 1) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "The file is not unique" });
-    return response;
+    return createResponse(400, { msg: "The file is not unique" });
   }
 
   const file = files[0];
@@ -44,8 +38,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .doc(file.id);
   batch.update(uniqueRef, { fileName: title });
 
-  
-
   await batch.commit();
-  return response;
+  return createResponse(200, { isSuccess: true });
 };

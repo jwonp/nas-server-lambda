@@ -18,7 +18,6 @@ const client = new S3Client({});
 exports.handler = async (event: APIGatewayProxyEvent) => {
   if (!event.body) {
     return createResponse(400, {
-      status: 400,
       msg: "No body",
     });
   }
@@ -28,7 +27,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
 
   if (!(payload as JwtPayload).id) {
     return createResponse(403, {
-      status: 403,
       msg: "Unauthorized",
     });
   }
@@ -42,7 +40,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const isAdmin = adminDocs.size === 1;
   if (isAdmin === false) {
     return createResponse(403, {
-      status: 403,
       msg: "Unauthorized admin",
     });
   }
@@ -52,7 +49,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const decryptedAccount = decryptObject(account);
   if (!decryptedAccount) {
     return createResponse(400, {
-      status: 400,
       msg: "Invaild Cipher text",
     });
   }
@@ -67,14 +63,14 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     ...parsedtemporaryAccount,
     expireIn: Date.now() + parsedtemporaryAccount.expireIn * ONE_DAY,
     isRegisted: false,
-    isGotTemplate:false,
+    isGotTemplate: false,
     admin: userDocId,
   };
   try {
     const adminRef = db.collection(FIREBASE_COLLECTION.ADMINS);
     const adminDocs = await adminRef.where("userId", "==", userDocId).get();
     if (adminDocs.size !== 1) {
-      return createResponse(400, { status: 400, msg: "Invaild admin user" });
+      return createResponse(400, { msg: "Invaild admin user" });
     }
     const temporaryAccountRef = db
       .collection(FIREBASE_COLLECTION.ADMINS)
@@ -113,7 +109,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     }
 
     return createResponse(400, {
-      status: 400,
       msg: "Fail to add temporary account",
     });
   }

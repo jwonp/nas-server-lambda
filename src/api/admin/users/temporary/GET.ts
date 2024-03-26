@@ -21,7 +21,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const payload = getPayloadInJWT(authorization);
 
   if (!(payload as JwtPayload).id) {
-    return createResponse(403, { status: 403, msg: "Unauthorized" });
+    return createResponse(403, { msg: "Unauthorized" });
   }
   const userDocId = (payload as JwtPayload).id;
 
@@ -33,7 +33,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const isAdmin = adminDocs.size === 1;
   if (isAdmin === false) {
     return createResponse(403, {
-      status: 403,
       msg: "Unauthorized admin",
     });
   }
@@ -97,7 +96,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       .length > 0
   ) {
     return createResponse(400, {
-      status: 400,
       msg: "Error on loading accounts",
     });
   }

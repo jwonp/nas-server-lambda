@@ -271,17 +271,22 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
         Key: copyToKey,
       });
       try {
-        console.log(`${meta} copy`);
         const res = await client.send(command);
-        console.log(res);
-        console.log(`${meta} copy end`);
+        console.log(
+          `${meta.fileName} with CopyToKey ${copyToKey} || CopyObjectResult ${res.CopyObjectResult}`
+        );
       } catch (err) {
+        console.log(
+          `${meta.fileName} with CopyToKey ${copyToKey} || is fail to copy`
+        );
         return createResponse(500, {
           status: 500,
           msg: "Fail to copy template files",
         });
       } finally {
-        console.log("file is processed");
+        console.log(
+          `${meta.fileName} with CopyToKey ${copyToKey} is processed`
+        );
       }
     }
   }

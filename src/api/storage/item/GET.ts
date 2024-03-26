@@ -1,10 +1,11 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent } from "aws-lambda";
 import admin from "firebase-admin";
 import * as serviceAccount from "../../../../firebase-admin-key.json";
 import { FIREBASE_COLLECTION } from "../../../libs/firebase/collections";
 import { getPayloadInJWT } from "../../../libs/JWTparser";
 import { JwtPayload } from "jsonwebtoken";
 import { MetaData } from "../../../types/MetaData";
+import { createResponse } from "../../../libs/ResponseBuilder";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -13,13 +14,9 @@ const db = admin.firestore();
 
 exports.handler = async (event: APIGatewayProxyEvent) => {
   let body = {};
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify(body),
-  };
+
   if (!event.queryStringParameters) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No Query Parameter" });
   }
   const { path } = event.queryStringParameters;
 
@@ -27,8 +24,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const payload = getPayloadInJWT(authorization);
 
   if (!(payload as JwtPayload).id) {
-    response.statusCode = 403;
-    return response;
+    return createResponse(403, { msg: "Unauthorized" });
   }
 
   const userDocId = (payload as JwtPayload).id;
@@ -38,15 +34,13 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.STORAGES);
 
   if (!path) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "No Parameter" });
-    return response;
+    return createResponse(400, { msg: "No Query Parameter" });
   }
 
   // path = /a => ["" => rest ,"a" => splitedPath]
-  console.log(`path is ${path}`);
+
   const [rest, ...splitedPath] = path.split("/");
-  console.log(`splitPath ${JSON.stringify(splitedPath)}`);
+
   const directory =
     splitedPath.length > 1
       ? splitedPath
@@ -71,18 +65,11 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
         history.directory === `/${directory}` && history.key === folder
     ).length === 1;
 
-  console.log("histories");
-  console.log(histories);
-  console.log(`directory + folder ? ${directory} + ${folder}`);
-  console.log(`is vaild directory ? ${isVaildDirectory}`);
-
   if (
     !isRootDirectory &&
     (histories?.length !== rowHistories.length || !isVaildDirectory)
   ) {
-    response.statusCode = 404;
-    response.body = JSON.stringify({ error: "Invaild Directory" });
-    return response;
+    return createResponse(404, { msg: "Invaild Directory" });
   }
 
   const displayHistories = histories.map((doc) => {
@@ -110,8 +97,5 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   }
   body = { ...body, items: items };
 
-  console.log("body");
-  console.log(body);
-  response.body = JSON.stringify(body);
-  return response;
+  return createResponse(200, { ...body });
 };

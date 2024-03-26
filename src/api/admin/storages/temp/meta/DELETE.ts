@@ -8,7 +8,7 @@ import { getPayloadInJWT } from "../../../../../libs/JWTparser";
 
 import { createResponse } from "../../../../../libs/ResponseBuilder";
 import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
-import { create } from "domain";
+
 
 const client = new S3Client({});
 const firebaseAdmin = admin.initializeApp({
@@ -17,22 +17,17 @@ const firebaseAdmin = admin.initializeApp({
 const db = admin.firestore();
 
 exports.handler = async (event: APIGatewayProxyEvent) => {
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify({}),
-  };
   if (!event.body) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No body" });
   }
 
   const authorization = event.headers.authorization;
   const payload = getPayloadInJWT(authorization);
 
   if (!(payload as JwtPayload).id) {
-    response.statusCode = 403;
-    return response;
+    return createResponse(403, { msg: "Unauthorized" });
   }
+
   const userDocId = (payload as JwtPayload).id;
 
   const adminCheckRef = db
@@ -43,7 +38,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const isAdmin = adminDocs.size === 1;
   if (isAdmin === false) {
     return createResponse(403, {
-      status: 403,
       msg: "Unauthorized admin",
     });
   }
@@ -90,7 +84,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     } catch (err) {
       console.error(err);
 
-      return createResponse(500, { error: "Fail to delete files" });
+      return createResponse(500, { msg: "Fail to delete files" });
     }
   }
   await batch.commit();

@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent } from "aws-lambda";
 import { decrypt } from "eccrypto";
 import { FIREBASE_COLLECTION } from "../../libs/firebase/collections";
 
@@ -18,19 +18,12 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   console.log(event.requestContext.http.path);
 
   if (!process.env.ECCRYPTO_PRIVATE_KEY) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Error 501: Fail to process to sign in" }),
-    };
+    return createResponse(500, { msg: " Fail to process to sign in" });
   }
   if (!event.body) {
-    return { statusCode: 400, body: JSON.stringify({ error: "No user data" }) };
+    return createResponse(400, { msg: "No user data" });
   }
 
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify({}),
-  };
   const ECCRYPTO_PRIVATE_KEY = Buffer.from(
     process.env.ECCRYPTO_PRIVATE_KEY,
     "hex"
@@ -43,9 +36,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .get();
 
   if (storedUserDetailDocs.size !== 1) {
-    response.statusCode === 400;
-    response.body = JSON.stringify({ error: "No matched user detail" });
-    return response;
+    return createResponse(400, { msg: "No matched user detail" });
   }
 
   const storedUserDetail = storedUserDetailDocs.docs.map((doc) => {
@@ -56,7 +47,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   })[0];
 
   if (storedUserDetail.expiredIn && storedUserDetail.expiredIn < Date.now()) {
-    return createResponse(403, { status: 403, msg: "This account is expired" });
+    return createResponse(403, { msg: "This account is expired" });
   }
 
   const volumeRef = db
@@ -66,9 +57,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const storedUserVolumeDocs = await volumeRef.get();
   if (storedUserVolumeDocs.size !== 1) {
     if (storedUserVolumeDocs.empty === false) {
-      response.statusCode === 400;
-      response.body = JSON.stringify({ error: "No matched user volume" });
-      return response;
+      return createResponse(400, { msg: "No matched user volume" });
     }
     const initVolumeSize = 128 * 1024 * 1024;
     const initVolume: VolumeSize = {
@@ -105,9 +94,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       storedEncryptedPassword
     );
 
-    console.log(decryptedPassword.toString());
-    console.log(decryptedStoredPassword.toString());
-
     if (decryptedPassword.toString() === decryptedStoredPassword.toString()) {
       const responseData: Omit<UserDetail, "password"> & {
         volume: VolumeSize;
@@ -120,16 +106,12 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
         volume: storedUserVolume,
       };
       console.log(responseData);
-      response.body = JSON.stringify(responseData);
-      return response;
+
+      return createResponse(200, { ...responseData });
     }
-    response.statusCode = 403;
-    response.body = JSON.stringify({ error: "Fail to sign in" });
-    return response;
+
+    return createResponse(403, { msg: "Fail to sign in" });
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Error 502: Fail to process to sign in" }),
-    };
+    return createResponse(500, { msg: "Fail to process to sign in" });
   }
 };

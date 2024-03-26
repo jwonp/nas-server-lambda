@@ -9,6 +9,7 @@ import { FIREBASE_COLLECTION } from "../../../../libs/firebase/collections";
 import { FieldValue } from "firebase-admin/firestore";
 import { getStartsWithCode } from "../../../../libs/firebase/FirebaseUtils";
 import { MetaData } from "../../../../types/MetaData";
+import { createResponse } from "../../../../libs/ResponseBuilder";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -16,13 +17,8 @@ const firebaseAdmin = admin.initializeApp({
 const db = admin.firestore();
 const client = new S3Client({});
 exports.handler = async (event: APIGatewayProxyEvent) => {
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify({}),
-  };
   if (!event.body) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No body" });
   }
   const { fileId, userId, directory } = JSON.parse(event.body);
 
@@ -34,14 +30,11 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.VOLUME)
     .get();
   if (userVolumeDocs.size !== 1) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "Error on loading user volume" });
-    return response;
+    return createResponse(400, { msg: "Error on loading user volume" });
   }
 
   if (!fileId) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No file id" });
   }
   ///
 
@@ -91,9 +84,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       console.log(Deleted);
     } catch (err) {
       console.error(err);
-      response.statusCode = 500;
-      response.body = JSON.stringify({ error: "Fail to delete files" });
-      return response;
+      return createResponse(500, { msg: "Fail to delete files" });
     }
 
     ///
@@ -140,5 +131,5 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
 
   await batch.commit();
 
-  return response;
+  return createResponse(200, { isSuccess: true });
 };

@@ -1,12 +1,10 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent } from "aws-lambda";
 import admin from "firebase-admin";
 import * as serviceAccount from "../../../../firebase-admin-key.json";
-
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
-
 import { FIREBASE_COLLECTION } from "../../../libs/firebase/collections";
-// import { VolumeSize } from "../../../entity/Volume";
 import { FieldValue } from "firebase-admin/firestore";
+import { createResponse } from "../../../libs/ResponseBuilder";
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -14,13 +12,8 @@ const firebaseAdmin = admin.initializeApp({
 const db = admin.firestore();
 const client = new S3Client({});
 exports.handler = async (event: APIGatewayProxyEvent) => {
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify({}),
-  };
   if (!event.body) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No body" });
   }
   const { fileId, fileSize, userId } = JSON.parse(event.body);
   const userVolumeDocs = await db
@@ -29,14 +22,11 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.VOLUME)
     .get();
   if (userVolumeDocs.size !== 1) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "Error on loading user volume" });
-    return response;
+    return createResponse(400, { msg: "Error on loading user volume" });
   }
 
   if (!fileId) {
-    response.statusCode = 400;
-    return response;
+    return createResponse(400, { msg: "No file id" });
   }
   console.log(fileId);
 
@@ -59,9 +49,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .where("key", "==", fileId)
     .get();
   if (deleteDocs.size !== 1) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "Target file is not unique" });
-    return response;
+    return createResponse(400, { msg: "Target file is not unique" });
   }
 
   const target = deleteDocs.docs.map((doc) => doc.id)[0];
@@ -73,9 +61,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .delete();
 
   const userVolumeDocId = userVolumeDocs.docs.map((doc) => doc.id)[0];
-  // const userVolume = userVolumeDocs.docs.map((doc) =>
-  //   doc.data()
-  // )[0] as VolumeSize;
 
   db.collection(FIREBASE_COLLECTION.USERS)
     .doc(userId)
@@ -83,5 +68,5 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .doc(userVolumeDocId)
     .update({ now: FieldValue.increment(-1 * fileSize) });
 
-  return response;
+  return createResponse(200, { isSucess: true });
 };

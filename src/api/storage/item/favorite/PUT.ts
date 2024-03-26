@@ -5,36 +5,27 @@ import { getPayloadInJWT } from "../../../../libs/JWTparser";
 import { JwtPayload } from "jsonwebtoken";
 import { FIREBASE_COLLECTION } from "../../../../libs/firebase/collections";
 import { MetaData } from "../../../../types/MetaData";
+import { createResponse } from "../../../../libs/ResponseBuilder";
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
 });
 const db = admin.firestore();
 exports.handler = async (event: APIGatewayProxyEvent) => {
-  let body = {};
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify(body),
-  };
   const authorization = event.headers.authorization;
   const payload = getPayloadInJWT(authorization);
 
   if (!(payload as JwtPayload).id) {
-    response.statusCode = 403;
-    return response;
+    return createResponse(403, { msg: "Unauthorized" });
   }
   if (!event.body) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "No body" });
-    return response;
+    return createResponse(400, { msg: "No body" });
   }
   const reqBody = JSON.parse(event.body);
   if (
     Object.keys(reqBody).includes("directory") === false ||
     Object.keys(reqBody).includes("folder") === false
   ) {
-    response.statusCode = 400;
-    response.body = JSON.stringify({ error: "Invaild body" });
-    return response;
+    return createResponse(400, { msg: "Invaild body" });
   }
   const favoriteFolder = reqBody as {
     directory: string;
@@ -53,9 +44,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       );
 
       if (favoriteDocs.size !== 1) {
-        response.statusCode = 400;
-        response.body = JSON.stringify({ error: "Invaild folder" });
-        return response;
+        return createResponse(400, { msg: "Invaild folder" });
       }
       const storedFavoriteFolder = favoriteDocs.docs.map((doc) => {
         return { id: doc.id, isFavorite: (doc.data() as MetaData).isFavorite };
@@ -68,12 +57,10 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
       });
     });
   } catch (e) {
-    response.statusCode = 500;
-    response.body = JSON.stringify({
-      error: "Error occured during mutate isFavorite",
+    return createResponse(500, {
+      msg: "Error occured during mutate isFavorite",
     });
-    return response;
   }
 
-  return response;
+  return createResponse(200, { isSuccess: true });
 };

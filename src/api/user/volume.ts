@@ -36,6 +36,6 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   }
   const volume = volumeDocs.docs.map((doc) => doc.data())[0];
 
-  response.body = JSON.stringify(volume);
+  response.body = JSON.stringify({ ...volume });
   return response;
 };
