@@ -28,6 +28,15 @@ usersTemporaryPOST:
         method: post
   url:
     cors: ${file(./settings/CorsSettings.yml):corsSettiings}
+usersTemporaryDELETE:
+  handler: src/api/admin/users/temporary/DELETE.handler
+  description: delete temporary account
+  events:
+    - httpApi:
+        path: /admin/users/temporary
+        method: delete
+  url:
+    cors: ${file(./settings/CorsSettings.yml):corsSettiings}
 
 # storages
 storagesTempMetaDELETE:

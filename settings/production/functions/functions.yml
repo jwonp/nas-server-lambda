@@ -25,6 +25,7 @@ functions:
   # /admin/users/**
   usersTemporaryGET: ${file(./settings/production/functions/controllers/admin.yml):usersTemporaryGET}
   usersTemporaryPOST: ${file(./settings/production/functions/controllers/admin.yml):usersTemporaryPOST}
+  usersTemporaryDELETE: ${file(./settings/dev/functions/controllers/admin.yml):usersTemporaryDELETE}
   # /admin/storages/**
   storagesTempMetaDELETE: ${file(./settings/production/functions/controllers/admin.yml):storagesTempMetaDELETE}
   storagesTempMetaPUT: ${file(./settings/production/functions/controllers/admin.yml):storagesTempMetaPUT}
