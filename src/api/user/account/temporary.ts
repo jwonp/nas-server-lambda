@@ -48,7 +48,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
   const userRef = db.collection(FIREBASE_COLLECTION.USERS).doc();
   const volumeRef = userRef.collection(FIREBASE_COLLECTION.VOLUME).doc();
 
-  const initVolumeSize = 128 * 1024 * 1024;
+  const initVolumeSize = 256 * 1000 * 1000;
   const initVolume: VolumeSize = {
     max: initVolumeSize,
     now: 0,

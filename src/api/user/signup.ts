@@ -29,7 +29,7 @@ exports.handler = async (event: APIGatewayProxyEvent) => {
     .collection(FIREBASE_COLLECTION.USERS)
     .add({ ...userDetail, createdTime: FieldValue.serverTimestamp() });
 
-  const initVolumeSize = 128 * 1024 * 1024;
+  const initVolumeSize = 256 * 1000 * 1000;
   const initVolume: VolumeSize = {
     max: initVolumeSize,
     now: 0,
